@@ -1,9 +1,13 @@
-# Dynamic Container Management
-This simple piece of software allows to user to request a virtualized environment from a pre-curated list of docker containers.
+# Sage Virtualized Environment Management
+This simple piece of software allows to user to request on demand virtualized environment from a pre-curated list of docker containers.  Virtualized desktop environments are VNC'd to the frontend via websocket and automatically shutdown upon inactivity.
 
 # Bindings
-> [!NOTE]  
-> The docker-compose file needs to create a binding with the host systems docker.sock; this implementation will spin up indiviual containers on the host system.  If this is intolerable, consider changing the docker binding another system or inside a docker container.
+| Container Path        | Function                                                                  |
+| -------------         | -------------                                                             |
+| /var/run/docker.sock  | Docker socket to establish communications with the host system's docker   | 
+| /app/data             | Data where the container's configs and data are stored                    |
+
+> The docker-compose.yml file needs to create a binding with the host systems docker.sock; this implementation will spin up indiviual containers on the host system.  If this is intolerable, consider changing the docker binding another system or inside a docker container.
 
 # Environment Variables
 | Variable Name                 | Default Param | Function                                                                  |
@@ -14,10 +18,10 @@ This simple piece of software allows to user to request a virtualized environmen
 | CONTAINER_NO_CLIENT_TIMEOUT   | 15            | Time after no active client connections before the container exits        |
 
 > [!CAUTION]  
-> Please ensure that ports are free.  Current implementation does not ss or netsat port mappings utilized outside of the docker environment.  This will be fixed in a future revision
+> Please ensure that the port range is avaliable.  Current implementation does not `ss` or `netsat` port mappings utilized beyond the scope of port allocation by docker.  This will be fixed in a future revision.
 
-> [!WARNING]  
-> By default the docker manager will scan for containers starting with "collab-vm-". To avoid any potential conflicts, ensure that other containers do not adhere to a similiar naming scheme.
+> [!NOTE]  
+> By default the docker manager will scan for containers starting with `collab-vm-`. To avoid any potential conflicts, ensure that other containers do not adhere to a similiar naming scheme.
 
 # API Endpoints
 tbd
