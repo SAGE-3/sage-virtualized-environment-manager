@@ -1,0 +1,25 @@
+version: "3"
+services:
+  co-sage-container-manager:
+    image: co-sage-container-manager:latest
+    container_name: co-sage-container-manager
+    restart: unless-stopped
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT_RANGE_START=11000
+      - PORT_RANGE_END=12000
+      - CONTAINER_BASE_NAME=collab-vm-
+      - CONTAINER_NO_CLIENT_TIMEOUT=15
+    ports:
+      - 4024:4024
+      - 4033:4033
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/:/app/data
+    tmpfs:
+      - /app/tmpfs_screenshots
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    network_mode: host
+
+# 127.0.0.1 inside container will point to host

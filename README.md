@@ -1,5 +1,8 @@
-# Sage Virtualized Environment Management
+# Sage Virtualized Environment Manager
 This simple piece of software allows to user to request on demand virtualized environment from a pre-curated list of docker containers.  Virtualized desktop environments are VNC'd to the frontend via websocket and automatically shutdown upon inactivity.
+
+## Host Dependencies
+- [Docker](https://www.docker.com/)
 
 ## Bindings
 | Container Path        | Function                                                                  |
