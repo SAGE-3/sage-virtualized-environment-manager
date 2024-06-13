@@ -7,6 +7,7 @@ This simple piece of software allows to user to request a virtualized environmen
 
 # Environment Variables
 | Variable Name                 | Default Param | Function                                                                  |
+| -------------                 | ------------- | -------------                                                             |
 | PORT_RANGE_START              | 11000         | Inclusive starting range for ports to be dynamically allocated            | 
 | PORT_RANGE_END                | 12000         | Exclusive ending range for ports to be dynamically allocated              |
 | CONTAINER_BASE_NAME           | collab-vm-    | Containers will be created with the following schema "collab-vm-{uid}"    |
@@ -41,17 +42,17 @@ Known Bugs:
 
 
 # Applications
-[https://www.blender.org/](Blender)
+[Blender](https://www.blender.org/)
 
-[https://www.mozilla.org/en-US/firefox/](FireFox)
+[FireFox](https://www.mozilla.org/en-US/firefox/)
 
 
 # General Acknowledgements
-[https://www.turbovnc.org/](TurboVNC)
+[TurboVNC](https://www.turbovnc.org/)
 
-[https://github.com/novnc/websockify](Websockify)
+[Websockify](https://github.com/novnc/websockify)
 
-[https://nginx.org/en/](Nginx)
+[Nginx](https://nginx.org/en/)
 
-[https://www.docker.com/](Docker)
+[Docker](https://www.docker.com/)
 
