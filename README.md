@@ -1,7 +1,7 @@
 # Sage Virtualized Environment Management
 This simple piece of software allows to user to request on demand virtualized environment from a pre-curated list of docker containers.  Virtualized desktop environments are VNC'd to the frontend via websocket and automatically shutdown upon inactivity.
 
-# Bindings
+## Bindings
 | Container Path        | Function                                                                  |
 | -------------         | -------------                                                             |
 | /var/run/docker.sock  | Docker socket to establish communications with the host system's docker   | 
@@ -9,7 +9,7 @@ This simple piece of software allows to user to request on demand virtualized en
 
 > The docker-compose.yml file needs to create a binding with the host systems docker.sock; this implementation will spin up indiviual containers on the host system.  If this is intolerable, consider changing the docker binding another system or inside a docker container.
 
-# Environment Variables
+## Environment Variables
 | Variable Name                 | Default Param | Function                                                                  |
 | -------------                 | ------------- | -------------                                                             |
 | PORT_RANGE_START              | 11000         | Inclusive starting range for ports to be dynamically allocated            | 
@@ -20,10 +20,10 @@ This simple piece of software allows to user to request on demand virtualized en
 > [!CAUTION]  
 > Please ensure that the port range is avaliable.  Current implementation does not `ss` or `netsat` port mappings utilized beyond the scope of port allocation by docker.  This will be fixed in a future revision.
 
-> [!NOTE]  
+> [!WARNING]  
 > By default the docker manager will scan for containers starting with `collab-vm-`. To avoid any potential conflicts, ensure that other containers do not adhere to a similiar naming scheme.
 
-# API Endpoints
+## API Endpoints
 tbd
 
 curl post ... {} ... "/api/vm/any/{uid}"
