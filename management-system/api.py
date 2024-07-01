@@ -47,7 +47,7 @@ manager = DockerManager(
 
 def get_sage_url(port):
     # return f"ws://10.89.51.134:4033/vmstream/{port}/vnc"
-    return f"/stream/{port}/vnc"
+    return f"/stream/{port}"
 
 # Multipurpose api call
 # Will create new container if uuid does not match, then return websocket and uuid
