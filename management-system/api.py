@@ -26,7 +26,15 @@ manager = DockerManager(
         },
         'vnc-x11-firefox': {
             "environment": {
+                'FIREFOX_URLS': [],
                 'FIREFOX_THEME': 0,
+                'CALLBACK_ID': '',
+
+                # 'CALLBACK_ADDR': '',
+                # 'CALLBACK_TOKEN': '',
+                # 'CALLBACK_CMD': '',
+                # 'CALLBACK_URL_BASE': '',
+                # 'CALLBACK_URL_V2': '',
                 # 'FIREFOX_STARTPAGE': "www.google.com",
             },
         },
@@ -76,11 +84,34 @@ async def handle_ws_get(uid: str):
     return {"url": get_sage_url(port)} if ws_url else {"details": "container not running"}
 
 
-# Command to stop/delete containers if running and deletes the stored directories
-@app.get("/api/vm/rm/{uid}")
-async def handle_delete():
-    global manager
-    return {"details": "not yet implemented"}
+# # Command to stop/delete containers if running and deletes the stored directories
+# @app.get("/api/vm/rm/{uid}")
+# async def handle_delete():
+#     global manager
+#     return {"details": "not yet implemented"}
+
+# if __name__ == "__main__":
+#     pass
+
+# from redis import Redis
+from rejson import Client, Path
+
+# Callbacks (Work Around Till Ryan Gets Back)
+@app.post("/api/vm/cb/{uid}")
+async def handle_callback(uid: str, configs: dict):
+    # global manager
+    # print(configs)
+
+    try:
+        # redis_client = Redis(host='host.docker.internal', port=6379, decode_responses=True)
+        json_client = Client(host='localhost', port=6379, decode_responses=True)
+        # JSON.SET "SAGE3:DB:APPS:59bd2c7d-4461-4ab5-9938-0b9183cdee93" .data.state.urls '["www.google.com"]'
+        json_client.jsonset(f"SAGE3:DB:APPS:{uid}", Path('.data.state.urls'), configs["urls"])
+    except Exception as e:
+        print(e)
+
+
+    return {}
 
 if __name__ == "__main__":
     pass

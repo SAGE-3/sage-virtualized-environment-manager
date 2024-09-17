@@ -25,7 +25,21 @@ class DockerManager():
         self.supported_containers   = supported_containers
         self.container_base_name    = container_base_name
         self.ws_timeout             = ws_timeout
+
+        self.token                  = ""
+        self.__load_token__()
     
+    def __load_token__(self):
+        # Make this load from a file...
+        self.token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ0ZXN0MUBnbWFpbC5jb20iLCJuYW1lIjoidGVzdDEiLCJhZG1pbiI6dHJ1ZSwiaWF0IjoxNjU0NTc2MTM5LCJleHAiOjE2ODYxMzM3MzksImF1ZCI6InNhZ2UzLmFwcCIsImlzcyI6InNhZ2UzYXBwQGdtYWlsLmNvbSJ9.kwQMDtdKXqGG9DZU8e4Mq_pC_GKCH-sMEalRcbIth3BeTsQ7apdZUPvZ4kTmgipJSoIUvyr72Z-2qDi3tKNdJB2OCnm8FMSRFWCt9KK6kxT2X8EiFh5f3T6q1cd1tRy-Nla9cF1zvRn1ALAetJRpVLIsH-XV-l4deWhrGfHNexwFLEJbvHb4E4UQtiB1bQZ5HwutztQvJtVOZ80HJxJccn7bjpVo-OdAjNjQjMLbJEGRgpJRAhyZaEVDojsiaJOrFtCUC65qvkC0gym-0HDd89Lmc2i54yf6h0Feb96OadeKT2TFjH3Jvi7_r7sTdE7N88oIaN_mQZhKKTUrI7EYTQ"
+
+    def __is_valid_uuid__(self, uid):
+        # can also check if its valid uid if you dont want any special user generated uids
+        if uid is None:
+            return False
+
+        return uid.lower() != "allocate"
+
     def __get_stream_url__(self, port):
         return f"{self.base_url}:{port}/vnc"
 
@@ -47,36 +61,38 @@ class DockerManager():
         return os.path.join(self.__instances_path__, uid, "configs.json")
 
     def __get_volume_path__(self, uid):
-        return os.path.join(self.__instances_path__, uid, "data")
-
-    def __get_directory_names__(self, directory):
-        directory_names = set()
-        for entry in os.listdir(directory):
-            if os.path.isdir(os.path.join(directory, entry)):
-                directory_names.add(entry)
-        return directory_names
-
-    def __generate_uuid__(self):
-        uid = str(uuid.uuid4())
-        while uid in self.__get_directory_names__(self.__instances_path__):
-            uid = str(uuid.uuid4())
         try:
             # Change to makedirs
             os.mkdir(os.path.join(self.__instances_path__, uid))
             os.mkdir(os.path.join(self.__instances_path__, uid, "data"))
             print(f"Directory '{uid}' created successfully.")
-            return uid
         except FileExistsError:
             print(f"Directory '{uid}' already exists.")
-            return None
         except OSError as e:
             print(f"Error creating directory '{uid}': {str(e)}")
-            return None
+            return '/dev/null'
+        return os.path.join(self.__instances_path__, uid, "data")
 
+    def __find_containers__(self, uid):
+        containers_found = self.client.containers.list(all=True, filters={"name": f"{self.container_base_name}{uid}"})
+        return containers_found
+
+    def __generate_uuid__(self):
+        uid = str(uuid.uuid4())
+        while len(self.__find_containers__(uid)) > 0:
+            uid = str(uuid.uuid4())
+        return uid
+        
     def __set_ws_timeout__(self, docker_args):
         if "environment" not in docker_args:
             docker_args["environment"] = {}
         docker_args["environment"]["WS_TIMEOUT"] = self.ws_timeout
+        return docker_args
+
+    def __add_env__(self, docker_args, key, value):
+        if "environment" not in docker_args:
+            docker_args["environment"] = {}
+        docker_args["environment"][key] = value
         return docker_args
 
     # Returns a guaranteed to work container
@@ -123,33 +139,43 @@ class DockerManager():
         port = self.__get_ports__()
         if port:
             # Init new if uid doesnt exist in data
-            if uid is None or uid not in self.__get_directory_names__(self.__instances_path__):
+            # if uid is None or uid not in self.__get_directory_names__(self.__instances_path__):
+            # if uid is None or len(self.__find_containers__(uid)) <= 0:
+            if not self.__is_valid_uuid__(uid):
                 uid = self.__generate_uuid__()
 
             # Start Container
             try:
-                # Save configs to make idempotentency when relaunching/ reinstancing
-                if os.path.isfile(self.__get_config_path__(uid)):
-                    with open(self.__get_config_path__(uid), 'r') as config_file:
-                        # TODO: Consider running this through the parser again to guarantee safety incase of file edit
-                        docker_args = json.load(config_file)
-                else:
-                    with open(self.__get_config_path__(uid), 'w') as config_file:
-                        json.dump(docker_args, config_file)
+                # # Save configs to make idempotentency when relaunching/ reinstancing
+                # if os.path.isfile(self.__get_config_path__(uid)):
+                #     with open(self.__get_config_path__(uid), 'r') as config_file:
+                #         # TODO: Consider running this through the parser again to guarantee safety incase of file edit
+                #         docker_args = json.load(config_file)
+                # else:
+                #     with open(self.__get_config_path__(uid), 'w') as config_file:
+                #         json.dump(docker_args, config_file)
                 
                 # Override/set ws timeout
                 docker_args = self.__set_ws_timeout__(docker_args)
+
+                # Generate additional env info if CALLBACK_ID exists to allow for callback to app_ids
+                if "CALLBACK_ID" in docker_args["environment"]:
+                    # docker_args = self.__add_env__(docker_args, "CALLBACK_TOKEN", self.token)
+                    # docker_args = self.__add_env__(docker_args, "CALLBACK_URL", f'http://host.docker.internal:3333/api/apps/{docker_args["environment"]["CALLBACK_ID"]}')
+                    docker_args = self.__add_env__(docker_args, "CALLBACK_URL", f'http://host.docker.internal:4024/api/vm/cb/{docker_args["environment"]["CALLBACK_ID"]}')
+
 
                 # Create and Launch Container
                 container = self.client.containers.run(
                     name=f'collab-vm-{uid}',
                     ports={'2222': port},
-                    volumes={
-                        self.__get_volume_path__(uid): {'bind': '/root', 'mode': 'rw'}
-                    },
+                    # volumes={
+                    #     self.__get_volume_path__(uid): {'bind': '/root', 'mode': 'rw'}
+                    # },
                     # cpu_shares=1024,
                     detach=True,
                     remove=True,
+                    extra_hosts={'host.docker.internal': 'host-gateway'},
                     **docker_args
                 )
 
