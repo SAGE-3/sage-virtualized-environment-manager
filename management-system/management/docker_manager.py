@@ -60,19 +60,6 @@ class DockerManager():
     def __get_config_path__(self, uid):
         return os.path.join(self.__instances_path__, uid, "configs.json")
 
-    def __get_volume_path__(self, uid):
-        try:
-            # Change to makedirs
-            os.mkdir(os.path.join(self.__instances_path__, uid))
-            os.mkdir(os.path.join(self.__instances_path__, uid, "data"))
-            print(f"Directory '{uid}' created successfully.")
-        except FileExistsError:
-            print(f"Directory '{uid}' already exists.")
-        except OSError as e:
-            print(f"Error creating directory '{uid}': {str(e)}")
-            return '/dev/null'
-        return os.path.join(self.__instances_path__, uid, "data")
-
     def __find_containers__(self, uid):
         containers_found = self.client.containers.list(all=True, filters={"name": f"{self.container_base_name}{uid}"})
         return containers_found
@@ -139,22 +126,11 @@ class DockerManager():
         port = self.__get_ports__()
         if port:
             # Init new if uid doesnt exist in data
-            # if uid is None or uid not in self.__get_directory_names__(self.__instances_path__):
-            # if uid is None or len(self.__find_containers__(uid)) <= 0:
             if not self.__is_valid_uuid__(uid):
                 uid = self.__generate_uuid__()
 
             # Start Container
-            try:
-                # # Save configs to make idempotentency when relaunching/ reinstancing
-                # if os.path.isfile(self.__get_config_path__(uid)):
-                #     with open(self.__get_config_path__(uid), 'r') as config_file:
-                #         # TODO: Consider running this through the parser again to guarantee safety incase of file edit
-                #         docker_args = json.load(config_file)
-                # else:
-                #     with open(self.__get_config_path__(uid), 'w') as config_file:
-                #         json.dump(docker_args, config_file)
-                
+            try:                
                 # Override/set ws timeout
                 docker_args = self.__set_ws_timeout__(docker_args)
 
@@ -183,24 +159,11 @@ class DockerManager():
                 print(f"Error starting Firefox container: {str(e)}")
                 return "Error starting Firefox container", None
 
-            # # Waiting For Container
-            # while container.status != 'running':
-            #     print(f"Waiting for container '{uid}' to be ready...")
-            #     time.sleep(0.1)
-            #     container.reload()
-
             return self.__get_stream_url__(port), port, uid
         else:
             return "No more resources/ports available", None
 
     async def await_ws(self, ws_url, port, uid, await_time=1):
-        # # Waiting For Container
-        # if container != None:
-        #     while container.status != 'running':
-        #         print(f"Waiting for container '{uid}' to be ready...")
-        #         await asyncio.sleep(0.2)
-        #         container.reload()
-
         # Waiting For WS:
         connection_ok = False
         await asyncio.sleep(1)
