@@ -52,7 +52,6 @@ manager = DockerManager(
     port_range=(int(os.environ.get("PORT_RANGE_START", 11000)), int(os.environ.get("PORT_RANGE_END", 12000)))
 )
 
-
 def get_sage_url(port):
     # return f"ws://10.89.51.134:4033/vmstream/{port}/vnc"
     return f"/stream/{port}"
@@ -82,16 +81,6 @@ async def handle_ws_get(uid: str):
     ws_url, port = manager.get_existing_container_port(uid) # TODO: Convert to async
     # await manager.await_ws(ws_url, port, uid)
     return {"url": get_sage_url(port)} if ws_url else {"details": "container not running"}
-
-
-# # Command to stop/delete containers if running and deletes the stored directories
-# @app.get("/api/vm/rm/{uid}")
-# async def handle_delete():
-#     global manager
-#     return {"details": "not yet implemented"}
-
-# if __name__ == "__main__":
-#     pass
 
 # from redis import Redis
 from rejson import Client, Path
