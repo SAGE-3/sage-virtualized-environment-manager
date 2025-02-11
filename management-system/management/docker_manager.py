@@ -163,11 +163,11 @@ class DockerManager():
         else:
             return "No more resources/ports available", None
 
-    async def await_ws(self, ws_url, port, uid, await_time=1):
+    async def await_ws(self, ws_url, port, uid, await_time=1, retries=30):
         # Waiting For WS:
         connection_ok = False
         await asyncio.sleep(1)
-        for i in range(600):
+        for i in range(retries):
             print(f"Waiting for connection {ws_url} with {uid} to be ready...")
             connection_ok = await NetworkCheck.check_websocket_connection(ws_url)
             # # DOSS like behaviour slows down boot time, only occured after introduction of nginx
@@ -180,7 +180,7 @@ class DockerManager():
                 break
 
         if not connection_ok:
-            return "Container status check timed out", None
+            return f"Container connection {ws_url} with {uid} status check timed out", None
 
         print(f"Done '{uid}'")
         return ws_url, port, uid
