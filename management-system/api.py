@@ -85,6 +85,15 @@ async def handle_ws_get(uid: str):
 # from redis import Redis
 from rejson import Client, Path
 
+@app.get("/api/vm/list")
+async def get_all_uids():
+    global manager
+    containers = manager.find_containers()
+    return [container.name.replace(f"{manager.container_base_name}", "") for container in containers]
+
+# from redis import Redis
+from rejson import Client, Path
+
 # Callbacks (Work Around Till Ryan Gets Back)
 @app.post("/api/vm/cb/{uid}")
 async def handle_callback(uid: str, configs: dict):

@@ -60,13 +60,13 @@ class DockerManager():
     def __get_config_path__(self, uid):
         return os.path.join(self.__instances_path__, uid, "configs.json")
 
-    def __find_containers__(self, uid):
+    def find_containers(self, uid=""):
         containers_found = self.client.containers.list(all=True, filters={"name": f"{self.container_base_name}{uid}"})
         return containers_found
 
     def __generate_uuid__(self):
         uid = str(uuid.uuid4())
-        while len(self.__find_containers__(uid)) > 0:
+        while len(self.find_containers(uid)) > 0:
             uid = str(uuid.uuid4())
         return uid
         

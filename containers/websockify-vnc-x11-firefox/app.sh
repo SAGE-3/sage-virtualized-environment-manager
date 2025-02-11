@@ -5,6 +5,10 @@ echo 'lockPref("browser.theme.content-theme", '$FIREFOX_THEME');' >> /lib/firefo
 echo 'lockPref("browser.theme.toolbar-theme", '$FIREFOX_THEME');' >> /lib/firefox-esr/vnc.cfg
 echo 'lockPref("startup.homepage_welcome_url", "'$FIREFOX_STARTPAGE'");' >> /lib/firefox-esr/vnc.cfg
 
+# Doesn't work well
+# firefox -CreateProfile "default-esr" --headless
+# ./install_plugin.sh ublock-origin.xpi
+
 urls_string="${FIREFOX_URLS//[\[\]\'\"]}"  # Remove square brackets and quotes
 urls_string="$(echo $urls_string | xargs)"  # Trim any extra spaces
 IFS=',' read -r -a urls <<< "$urls_string" # Split the string into an array using commas as the delimiter

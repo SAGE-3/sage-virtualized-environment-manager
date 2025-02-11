@@ -16,6 +16,22 @@ RUN gcc -Wall -o dejsonlz4 dejsonlz4-master/src/dejsonlz4.c dejsonlz4-master/src
 COPY configs/vnc.js /lib/firefox-esr/defaults/pref/
 COPY configs/vnc.cfg /lib/firefox-esr/
 
+# Plugins
+# RUN wget --no-check-certificate https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi -O ublock-origin.xpi \
+#     && mkdir -p /lib/firefox-esr/browser/extensions \
+#     && cp ublock-origin.xpi /lib/firefox-esr/browser/extensions/ublock@raymondhill.net.xpi \
+#     && rm ublock-origin.xpi
+# # Install uBlock Origin extension system-wide
+# RUN mkdir -p /lib/firefox-esr/distribution/extensions && \
+#     wget -O /lib/firefox-esr/distribution/extensions/ublock0@raymondhill.net.xpi \
+#     --no-check-certificate https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi
+
+COPY configs/install_plugin.sh .
+RUN chmod +x install_plugin.sh
+RUN wget --no-check-certificate https://addons.mozilla.org/firefox/downloads/latest/ublock-origin/latest.xpi -O ublock-origin.xpi \
+    && ./install_plugin.sh ublock-origin.xpi
+
+
 COPY app.sh .
 COPY callback.sh .
 COPY app_safe_shutdown.sh .
