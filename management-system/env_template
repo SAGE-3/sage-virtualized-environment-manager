@@ -1,0 +1,9 @@
+# SAGE3_SERVER=127.0.0.1:3333
+# SAGE3_SERVER=host.docker.internal:3333
+# SAGE3_SERVER=localhost:3333
+# SAGE3_SERVER=localhost:3333
+# ENVIRONMENT=production
+
+SAGE3_SERVER=127.0.0.1
+ENVIRONMENT=development
+TOKEN=token_here
