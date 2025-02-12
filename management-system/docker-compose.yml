@@ -5,6 +5,9 @@ services:
     container_name: co-sage-container-manager
     restart: unless-stopped
     environment:
+      - SAGE3_SERVER=${SAGE3_SERVER}
+      - TOKEN=${TOKEN}
+      - ENVIRONMENT=development
       - PYTHONUNBUFFERED=1
       - PORT_RANGE_START=11000
       - PORT_RANGE_END=12000

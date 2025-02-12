@@ -1,12 +1,22 @@
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import RedirectResponse, StreamingResponse
 
+import aiohttp
+
 import httpx
 import os
 import asyncio
 
 import pycurl
 from management import DockerManager
+
+from foresight.config import config as conf, prod_type
+# from dotenv import load_dotenv
+# load_dotenv() # load from .env file
+
+prod_type = os.getenv("ENVIRONMENT", "development")
+sage3_app_url = f'{conf[prod_type]["web_server"]}/api/apps'
+jwt_token = os.getenv('TOKEN', '')
 
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -82,8 +92,6 @@ async def handle_ws_get(uid: str):
     # await manager.await_ws(ws_url, port, uid)
     return {"url": get_sage_url(port)} if ws_url else {"details": "container not running"}
 
-# from redis import Redis
-from rejson import Client, Path
 
 @app.get("/api/vm/list")
 async def get_all_uids():
@@ -91,25 +99,48 @@ async def get_all_uids():
     containers = manager.find_containers()
     return [container.name.replace(f"{manager.container_base_name}", "") for container in containers]
 
-# from redis import Redis
-from rejson import Client, Path
 
-# Callbacks (Work Around Till Ryan Gets Back)
 @app.post("/api/vm/cb/{uid}")
 async def handle_callback(uid: str, configs: dict):
-    # global manager
-    # print(configs)
-
+    global jwt_token
+    global sage3_app_url
+    print(f"callback request for {uid}")
     try:
-        # redis_client = Redis(host='host.docker.internal', port=6379, decode_responses=True)
-        json_client = Client(host='localhost', port=6379, decode_responses=True)
-        # JSON.SET "SAGE3:DB:APPS:59bd2c7d-4461-4ab5-9938-0b9183cdee93" .data.state.urls '["www.google.com"]'
-        json_client.jsonset(f"SAGE3:DB:APPS:{uid}", Path('.data.state.urls'), configs["urls"])
+        data = {"state.urls": configs["urls"]}
+        headers = {
+            'Authorization': f'Bearer {jwt_token}',
+            'Content-Type': 'application/json'
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.put(f'{sage3_app_url}/{uid}', 
+                                    headers=headers, 
+                                    json=data)
+            return {"ok"}
     except Exception as e:
         print(e)
 
+    return {"failed"}
 
-    return {}
+
+# # Direct push to redis callback method
+# #
+# # from redis import Redis
+# from rejson import Client, Path
+# @app.post("/api/vm/cb/{uid}")
+# async def handle_callback(uid: str, configs: dict):
+#     # global manager
+#     # print(configs)
+
+#     try:
+#         # redis_client = Redis(host='host.docker.internal', port=6379, decode_responses=True)
+#         # JSON.SET "SAGE3:DB:APPS:59bd2c7d-4461-4ab5-9938-0b9183cdee93" .data.state.urls '["www.google.com"]'
+
+#         json_client = Client(host='localhost', port=6379, decode_responses=True)
+#         json_client.jsonset(f"SAGE3:DB:APPS:{uid}", Path('.data.state.urls'), configs["urls"])
+#     except Exception as e:
+#         print(e)
+#     return {}
 
 if __name__ == "__main__":
     pass
