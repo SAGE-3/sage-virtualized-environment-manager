@@ -28,7 +28,7 @@ app = FastAPI()
 manager = DockerManager(
     data_path=os.path.join(__location__, "data"),
     supported_containers = {
-        'websockify-baseimg': {
+        'vnc-connect': {
             "environment": {
                 'TARGET_IP': '0.0.0.0',
                 'TARGET_PORT': '5900',

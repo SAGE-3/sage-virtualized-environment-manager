@@ -5,8 +5,11 @@ cd "$(dirname "$0")" && cd containers
 cd baseimage-websockify && ./build.sh && cd ..
 cd baseimage-websockify-audio && ./build.sh && cd ..
 
-cd baseimage-websockify-vnc-x11 && ./build.sh  && cd ..
-cd baseimage-websockify-vnc-x11-audio && ./build.sh  && cd ..
+cd baseimage-websockify-vnc-x11 && ./build.sh && cd ..
+cd baseimage-websockify-vnc-x11-audio && ./build.sh && cd ..
+
+cd websockify-vnc-connect && ./build.sh && cd ..
+
 
 # Apps
 for dir in websockify-vnc-x11-*/

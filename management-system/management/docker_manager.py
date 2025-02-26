@@ -156,8 +156,8 @@ class DockerManager():
                 )
 
             except docker.errors.APIError as e:
-                print(f"Error starting Firefox container: {str(e)}")
-                return "Error starting Firefox container", None
+                print(f"Error starting {docker_args.get('image', '')} container: {str(e)}")
+                return f"Error starting {docker_args.get('image', '')} container", None
 
             return self.__get_stream_url__(port), port, uid
         else:
