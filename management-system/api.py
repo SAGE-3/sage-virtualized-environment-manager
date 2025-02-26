@@ -16,6 +16,7 @@ from foresight.config import config as conf, prod_type
 
 prod_type = os.getenv("ENVIRONMENT", "development")
 sage3_app_url = f'{conf[prod_type]["web_server"]}/api/apps'
+sage3_app_url = sage3_app_url.replace(":3333/api/apps", ":3000/api/apps") # Temporary fix to combat the revert of port 3000 -> 3333
 jwt_token = os.getenv('TOKEN', '')
 
 
