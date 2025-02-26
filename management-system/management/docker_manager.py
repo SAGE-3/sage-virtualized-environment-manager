@@ -156,8 +156,8 @@ class DockerManager():
                 )
 
             except docker.errors.APIError as e:
-                print(f"Error starting {docker_args.get('image', '')} container: {str(e)}")
-                return f"Error starting {docker_args.get('image', '')} container", None
+                print(f"Error starting container: {str(e)}")
+                return "Error starting container", None
 
             return self.__get_stream_url__(port), port, uid
         else:
@@ -172,12 +172,14 @@ class DockerManager():
             connection_ok = await NetworkCheck.check_websocket_connection(ws_url)
             # # DOSS like behaviour slows down boot time, only occured after introduction of nginx
             # await asyncio.sleep(0.1)
-            await asyncio.sleep(await_time)
 
             if connection_ok:
                 # decreases probability of error when the prior loop connects too quickly
                 await asyncio.sleep(0.1)
                 break
+
+            await asyncio.sleep(await_time)
+
 
         if not connection_ok:
             return f"Container connection {ws_url} with {uid} status check timed out", None

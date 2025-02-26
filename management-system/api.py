@@ -118,7 +118,7 @@ async def handle_callback(uid: str, configs: dict):
                                     json=data)
             return {"ok"}
     except Exception as e:
-        print(e)
+        print("callback error", e)
 
     return {"failed"}
 
