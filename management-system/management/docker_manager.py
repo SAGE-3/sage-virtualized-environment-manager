@@ -184,7 +184,7 @@ class DockerManager():
         if not connection_ok:
             return f"Container connection {ws_url} with {uid} status check timed out", None
 
-        print(f"Done '{uid}'")
+        print(f"Container ready '{uid}'")
         return ws_url, port, uid
 
         
