@@ -16,8 +16,10 @@ from foresight.config import config as conf, prod_type
 
 prod_type = os.getenv("ENVIRONMENT", "development")
 sage3_app_url = f'{conf[prod_type]["web_server"]}/api/apps'
-sage3_app_url = sage3_app_url.replace(":3333/api/apps", ":3000/api/apps") # Temporary fix to combat the revert of port 3000 -> 3333
+print(conf)
+sage3_app_url = sage3_app_url.replace(":3000:3333/api/apps", ":3000/api/apps") # Temporary fix to combat the revert of port 3333 -> 3000
 jwt_token = os.getenv('TOKEN', '')
+print(sage3_app_url)
 
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -65,6 +67,7 @@ manager = DockerManager(
 
 def get_sage_url(port):
     # return f"ws://10.89.51.134:4033/vmstream/{port}/vnc"
+    # return f"/api/vmstream/{port}"
     return f"/stream/{port}"
 
 # Multipurpose api call
