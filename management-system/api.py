@@ -32,10 +32,11 @@ def dev_map_func(name):
     return name # convert to lambda later if you want
 
 def prod_map_func(name):
+    tag = ':amd64'
     prod_container_mapping = {
-        'vnc-connect': 'ghcr.io/sage-3/cosage-vnc',
-        'vnc-x11-firefox': 'ghcr.io/sage-3/cosage-firefox',
-        'vnc-x11-blender': 'ghcr.io/sage-3/cosage-blender',
+        'vnc-connect': f'ghcr.io/sage-3/cosage-vnc{tag}',
+        'vnc-x11-firefox': f'ghcr.io/sage-3/cosage-firefox{tag}',
+        'vnc-x11-blender': f'ghcr.io/sage-3/cosage-blender{tag}',
     }
     return prod_container_mapping[name]
 

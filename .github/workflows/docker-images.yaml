@@ -37,7 +37,7 @@ jobs:
           context: "{{defaultContext}}:."
           platforms: linux/amd64
           push: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosagecontainermanager:amd64
+          tags: ${{ env.REGISTRY }}/sage-3/cosage-containermanager:amd64
           labels: ${{ steps.meta.outputs.labels }}
 
 
@@ -88,8 +88,9 @@ jobs:
           file: containers/websockify-vnc-connect/Dockerfile
           context: "{{defaultContext}}:."
           platforms: linux/amd64
-          load: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosage-vnc:latest
+          push: true
+          tags: ${{ env.REGISTRY }}/sage-3/cosage-vnc:amd64
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Blender Docker image
         uses: docker/build-push-action@v5
@@ -97,8 +98,9 @@ jobs:
           file: containers/websockify-vnc-x11-blender/Dockerfile
           context: "{{defaultContext}}:."
           platforms: linux/amd64
-          load: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosage-blender:latest
+          push: true
+          tags: ${{ env.REGISTRY }}/sage-3/cosage-blender:amd64
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Firefox Docker image
         uses: docker/build-push-action@v5
@@ -106,8 +108,9 @@ jobs:
           file: containers/websockify-vnc-x11-firefox/Dockerfile
           context: "{{defaultContext}}:."
           platforms: linux/amd64
-          load: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox:latest
+          push: true
+          tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox:amd64
+          labels: ${{ steps.meta.outputs.labels }}
 
       - name: Build and push Firefox-Audio Docker image
         uses: docker/build-push-action@v5
@@ -115,8 +118,9 @@ jobs:
           file: containers/websockify-vnc-x11-firefox-audio/Dockerfile
           context: "{{defaultContext}}:."
           platforms: linux/amd64
-          load: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox-audio:latest
+          push: true
+          tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox-audio:amd64
+          labels: ${{ steps.meta.outputs.labels }}
 
   # No Arm support for now (not tested)
   # build-and-push-arm64:
