@@ -13,7 +13,7 @@ import json
 from .network_check import NetworkCheck
 
 class DockerManager():
-    def __init__(self, data_path, supported_containers, container_base_name="collab-vm-", ws_timeout=20, port_range=(11000, 12000)):
+    def __init__(self, data_path, container_mapping, supported_containers, container_base_name="collab-vm-", ws_timeout=20, port_range=(11000, 12000)):
         # self.base_url = "ws://10.89.51.134"
         self.base_url   = "ws://127.0.0.1"
         # self.client   = docker.from_env()
@@ -24,6 +24,7 @@ class DockerManager():
         self.__instances_path__     = os.path.join(data_path, "instances")
         self.supported_containers   = supported_containers
         self.container_base_name    = container_base_name
+        self.container_mapping      = container_mapping
         self.ws_timeout             = ws_timeout
 
         self.token                  = ""
@@ -94,8 +95,8 @@ class DockerManager():
         for key, param in configs.get("env", {}).items():
             if key in container_envs:
                 final_configs["environment"][key] = param
-        final_configs["image"] = configs.get("vm")
-        
+        final_configs["image"] = self.container_mapping(configs.get("vm"))
+        print("using image:", final_configs["image"])
         return final_configs
 
     def __existing_container_port__(self, uid):

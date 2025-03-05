@@ -27,9 +27,24 @@ os.system("./init.sh")
 
 app = FastAPI()
 
+# Mappings to support using external repo
+def dev_map_func(name):
+    return name # convert to lambda later if you want
+
+def prod_map_func(name):
+    prod_container_mapping = {
+        'vnc-connect': 'ghcr.io/sage-3/cosage-vnc',
+        'vnc-x11-firefox': 'ghcr.io/sage-3/cosage-firefox',
+        'vnc-x11-blender': 'ghcr.io/sage-3/cosage-blender',
+    }
+    return prod_container_mapping[name]
+
+container_mapping = dev_map_func if prod_type.lower() == "development" else prod_map_func
+
 # Default callable containers and values
 manager = DockerManager(
     data_path=os.path.join(__location__, "data"),
+    container_mapping=container_mapping,
     supported_containers = {
         'vnc-connect': {
             "environment": {
@@ -51,10 +66,10 @@ manager = DockerManager(
                 # 'FIREFOX_STARTPAGE': "www.google.com",
             },
         },
-        'vnc-x11-doom': {
-            "environment": {
-            },
-        },
+        # 'vnc-x11-doom': {
+        #     "environment": {
+        #     },
+        # },
         'vnc-x11-blender': {
             "environment": {
             },
