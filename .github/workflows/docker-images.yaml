@@ -43,14 +43,18 @@ jobs:
 
 
       # Base Images
-      - name: Build and push Base WebSockify Docker image internally
-        uses: docker/build-push-action@v5
+      - name: Build docker images
+        uses: actions/checkout@v3
         with:
-          file: containers/baseimage-websockify/Dockerfile
-          context: "${{ github.workspace }}/containers/baseimage-websockify"
-          platforms: linux/amd64
-          load: true
-          tags: websockify-baseimage:latest
+          run: cd containers/baseimage-websockify && docker build -t local < Dockerfile
+      # - name: Build and push Base WebSockify Docker image internally
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     file: containers/baseimage-websockify/Dockerfile
+      #     context: "${{ github.workspace }}/containers/baseimage-websockify"
+      #     platforms: linux/amd64
+      #     load: true
+      #     tags: websockify-baseimage:latest
 
       - name: Build and push Base WebSockify Docker image internally
         uses: docker/build-push-action@v5
