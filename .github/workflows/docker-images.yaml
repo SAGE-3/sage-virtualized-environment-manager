@@ -53,7 +53,7 @@ jobs:
           file: containers/baseimage-websockify/Dockerfile
           context: "${{ github.workspace }}/containers/baseimage-websockify"
           platforms: linux/amd64
-          load: true
+          push: true
           tags: localhost:5000/websockify-baseimage:latest
 
       - name: Build and push Base WebSockify Audio Docker image internally
