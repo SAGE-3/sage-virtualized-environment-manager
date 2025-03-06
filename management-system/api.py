@@ -8,9 +8,10 @@ import os
 import asyncio
 
 import pycurl
-from management import DockerManager
+from management import DockerManager, docker_pull
 
 from foresight.config import config as conf, prod_type
+from config import ContainerConfigs
 # from dotenv import load_dotenv
 # load_dotenv() # load from .env file
 
@@ -20,6 +21,8 @@ print(conf)
 sage3_app_url = sage3_app_url.replace(":3000:3333/api/apps", ":3000/api/apps") # Temporary fix to combat the revert of port 3333 -> 3000
 jwt_token = os.getenv('TOKEN', '')
 print(sage3_app_url)
+print()
+print("Running in", prod_type, "mode")
 
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -27,59 +30,23 @@ os.system("./init.sh")
 
 app = FastAPI()
 
-# Mappings to support using external repo
-def dev_map_func(name):
-    return name # convert to lambda later if you want
 
-def prod_map_func(name):
-    tag = ':amd64'
-    prod_container_mapping = {
-        'vnc-connect': f'ghcr.io/sage-3/cosage-vnc{tag}',
-        'vnc-x11-firefox': f'ghcr.io/sage-3/cosage-firefox{tag}',
-        'vnc-x11-blender': f'ghcr.io/sage-3/cosage-blender{tag}',
-    }
-    return prod_container_mapping[name]
+if prod_type.lower() != "development":
+    for key, image in ContainerConfigs.prod_container_mapping.items():
+        docker_pull(image)
 
-container_mapping = dev_map_func if prod_type.lower() == "development" else prod_map_func
+container_mapping = ContainerConfigs.prod_map_func if prod_type.lower() != "development" else ContainerConfigs.dev_map_func
 
 # Default callable containers and values
 manager = DockerManager(
-    data_path=os.path.join(__location__, "data"),
-    container_mapping=container_mapping,
-    supported_containers = {
-        'vnc-connect': {
-            "environment": {
-                'TARGET_IP': '0.0.0.0',
-                'TARGET_PORT': '5900',
-            },
-        },
-        'vnc-x11-firefox': {
-            "environment": {
-                'FIREFOX_URLS': [],
-                'FIREFOX_THEME': 0,
-                'CALLBACK_ID': '',
-
-                # 'CALLBACK_ADDR': '',
-                # 'CALLBACK_TOKEN': '',
-                # 'CALLBACK_CMD': '',
-                # 'CALLBACK_URL_BASE': '',
-                # 'CALLBACK_URL_V2': '',
-                # 'FIREFOX_STARTPAGE': "www.google.com",
-            },
-        },
-        # 'vnc-x11-doom': {
-        #     "environment": {
-        #     },
-        # },
-        'vnc-x11-blender': {
-            "environment": {
-            },
-        }
-    },
-    container_base_name=os.environ.get("CONTAINER_BASE_NAME", "collab-vm-"),
-    ws_timeout=os.environ.get("CONTAINER_NO_CLIENT_TIMEOUT", 20),
-    port_range=(int(os.environ.get("PORT_RANGE_START", 11000)), int(os.environ.get("PORT_RANGE_END", 12000)))
+    data_path               = os.path.join(__location__, "data"),
+    container_mapping       = container_mapping,
+    supported_containers    = ContainerConfigs.supported_containers,
+    container_base_name     = os.environ.get("CONTAINER_BASE_NAME", "collab-vm-"),
+    ws_timeout              = os.environ.get("CONTAINER_NO_CLIENT_TIMEOUT", 20),
+    port_range              = (int(os.environ.get("PORT_RANGE_START", 11000)), int(os.environ.get("PORT_RANGE_END", 12000)))
 )
+print("Init Done")
 
 def get_sage_url(port):
     # return f"ws://10.89.51.134:4033/vmstream/{port}/vnc"
