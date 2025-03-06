@@ -35,7 +35,7 @@ jobs:
         with:
           file: management-system/Dockerfile
           # context: "{{defaultContext}}:."
-          context: "${{ github.workspace }}/management-system/Dockerfile"
+          context: "${{ github.workspace }}/management-system"
           platforms: linux/amd64
           push: true
           tags: ${{ env.REGISTRY }}/sage-3/cosage-containermanager:amd64
