@@ -1,4 +1,4 @@
-FROM vnc-x11-audio-baseimage:latest
+FROM vnc-x11-audio-baseimage
 
 RUN apt-get -y install --no-install-recommends firefox-esr
 

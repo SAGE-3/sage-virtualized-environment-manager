@@ -1,4 +1,4 @@
-FROM websockify-baseimage:latest
+FROM websockify-baseimage
 
 WORKDIR /
 
