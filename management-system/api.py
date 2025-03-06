@@ -50,10 +50,10 @@ print("Init Done")
 
 def get_sage_url(port):
     # return f"ws://10.89.51.134:4033/vmstream/{port}/vnc"
-    if prod_type.lower() != "development":
-        return f"/api/vmstream/{port}"
-    else:
-        return f"/stream/{port}"
+    # if prod_type.lower() != "development":
+    # else:
+    #     return f"/stream/{port}"
+    return f"/api/vmstream/{port}"
 
 # Multipurpose api call
 # Will deploy new container if uuid does not match, then return websocket and uuid
