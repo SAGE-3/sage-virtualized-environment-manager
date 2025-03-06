@@ -10,7 +10,12 @@ env:
 jobs:
   build-and-push-amd64:
     runs-on: ubuntu-latest
-
+    services:
+          registry:
+            image: registry:2
+            ports:
+              - 5000:5000
+              
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -45,8 +50,6 @@ jobs:
 
 
       # Base Images
-      # - name: Build and push Base WebSockify Docker image internally
-      #   run: "cd ${{ github.workspace }}/containers/baseimage-websockify && docker build -t websockify-baseimage ."
       - name: Build and push Base WebSockify Docker image internally
         uses: docker/build-push-action@v5
         with:
@@ -56,14 +59,14 @@ jobs:
           push: true
           tags: localhost:5000/websockify-baseimage:latest
 
-      - name: Build and push Base WebSockify Audio Docker image internally
-        uses: docker/build-push-action@v5
-        with:
-          file: containers/baseimage-websockify-audio/Dockerfile
-          context: "${{ github.workspace }}/containers/baseimage-websockify-audio"
-          platforms: linux/amd64
-          load: true
-          tags: websockify-baseimage-audio:latest
+      # - name: Build and push Base WebSockify Audio Docker image internally
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     file: containers/baseimage-websockify-audio/Dockerfile
+      #     context: "${{ github.workspace }}/containers/baseimage-websockify-audio"
+      #     platforms: linux/amd64
+      #     load: true
+      #     tags: websockify-baseimage-audio:latest
 
 
       # Elevation 1 (Intermediary)
@@ -75,17 +78,17 @@ jobs:
           file: containers/baseimage-websockify-vnc-x11/Dockerfile
           context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11"
           platforms: linux/amd64
-          load: true
-          tags: vnc-x11-baseimage:latest
+          push: true
+          tags: localhost:5000/vnc-x11-baseimage:latest
 
-      - name: Build and push Base WebSockify VNC with X11 and Audio image internally
-        uses: docker/build-push-action@v5
-        with:
-          file: containers/baseimage-websockify-vnc-x11-audio/Dockerfile
-          context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11-audio"
-          platforms: linux/amd64
-          load: true
-          tags: vnc-x11-audio-baseimage:latest
+      # - name: Build and push Base WebSockify VNC with X11 and Audio image internally
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     file: containers/baseimage-websockify-vnc-x11-audio/Dockerfile
+      #     context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11-audio"
+      #     platforms: linux/amd64
+      #     load: true
+      #     tags: vnc-x11-audio-baseimage:latest
 
 
       # Elevation 2 (Final Containers/ Apps)
@@ -119,15 +122,15 @@ jobs:
           tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox:amd64
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push Firefox-Audio Docker image
-        uses: docker/build-push-action@v5
-        with:
-          file: containers/websockify-vnc-x11-firefox-audio/Dockerfile
-          context: "${{ github.workspace }}/containers/websockify-vnc-x11-firefox-audio"
-          platforms: linux/amd64
-          push: true
-          tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox-audio:amd64
-          labels: ${{ steps.meta.outputs.labels }}
+      # - name: Build and push Firefox-Audio Docker image
+      #   uses: docker/build-push-action@v5
+      #   with:
+      #     file: containers/websockify-vnc-x11-firefox-audio/Dockerfile
+      #     context: "${{ github.workspace }}/containers/websockify-vnc-x11-firefox-audio"
+      #     platforms: linux/amd64
+      #     push: true
+      #     tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox-audio:amd64
+      #     labels: ${{ steps.meta.outputs.labels }}
 
 
 
