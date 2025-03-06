@@ -43,16 +43,16 @@ jobs:
 
 
       # Base Images
-      - name: Build and push Base WebSockify Docker image internally
-        run: "cd ${{ github.workspace }}/containers/baseimage-websockify && docker build -t websockify-baseimage ."
       # - name: Build and push Base WebSockify Docker image internally
-      #   uses: docker/build-push-action@v5
-      #   with:
-      #     file: containers/baseimage-websockify/Dockerfile
-      #     context: "${{ github.workspace }}/containers/baseimage-websockify"
-      #     platforms: linux/amd64
-      #     load: true
-      #     tags: websockify-baseimage:latest
+      #   run: "cd ${{ github.workspace }}/containers/baseimage-websockify && docker build -t websockify-baseimage ."
+      - name: Build and push Base WebSockify Docker image internally
+        uses: docker/build-push-action@v5
+        with:
+          file: containers/baseimage-websockify/Dockerfile
+          context: "${{ github.workspace }}/containers/baseimage-websockify"
+          platforms: linux/amd64
+          load: true
+          tags: localhost:5000/websockify-baseimage:latest
 
       - name: Build and push Base WebSockify Audio Docker image internally
         uses: docker/build-push-action@v5
