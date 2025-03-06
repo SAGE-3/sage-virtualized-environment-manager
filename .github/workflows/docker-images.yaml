@@ -68,6 +68,8 @@ jobs:
       - name: Build and push Base WebSockify VNC with X11 Docker image internally
         uses: docker/build-push-action@v5
         with:
+          build-contexts: |
+            websockify-baseimage=docker-image://localhost:5000/websockify-baseimage:latest
           file: containers/baseimage-websockify-vnc-x11/Dockerfile
           context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11"
           platforms: linux/amd64
