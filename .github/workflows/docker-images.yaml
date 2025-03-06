@@ -50,7 +50,7 @@ jobs:
           context: "${{ github.workspace }}/containers/baseimage-websockify"
           platforms: linux/amd64
           load: true
-          tags: websockify-baseimage
+          tags: websockify-baseimage:latest
 
       - name: Build and push Base WebSockify Docker image internally
         uses: docker/build-push-action@v5
@@ -59,7 +59,7 @@ jobs:
           context: "${{ github.workspace }}/containers/baseimage-websockify-audio"
           platforms: linux/amd64
           load: true
-          tags: websockify-baseimage-audio
+          tags: websockify-baseimage-audio:latest
 
 
       # Elevation 1 (Intermediary)
@@ -70,7 +70,7 @@ jobs:
           context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11"
           platforms: linux/amd64
           load: true
-          tags: vnc-x11-baseimage
+          tags: vnc-x11-baseimage:latest
 
       - name: Build and push Base WebSockify VNC with X11 and Audio image internally
         uses: docker/build-push-action@v5
@@ -79,7 +79,7 @@ jobs:
           context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11-audio"
           platforms: linux/amd64
           load: true
-          tags: vnc-x11-audio-baseimage
+          tags: vnc-x11-audio-baseimage:latest
 
 
       # Elevation 2 (Final Containers/ Apps)
