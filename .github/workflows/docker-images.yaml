@@ -47,7 +47,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/baseimage-websockify"
           platforms: linux/amd64
           load: true
           tags: websockify-baseimage:latest
@@ -56,7 +56,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify-audio/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/baseimage-websockify-audio"
           platforms: linux/amd64
           load: true
           tags: websockify-baseimage-audio:latest
@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify-vnc-x11/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11"
           platforms: linux/amd64
           load: true
           tags: vnc-x11-baseimage:latest
@@ -76,7 +76,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify-vnc-x11-audio/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/baseimage-websockify-vnc-x11-audio"
           platforms: linux/amd64
           load: true
           tags: vnc-x11-audio-baseimage:latest
@@ -87,7 +87,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/websockify-vnc-connect/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/websockify-vnc-connect"
           platforms: linux/amd64
           push: true
           tags: ${{ env.REGISTRY }}/sage-3/cosage-vnc:amd64
@@ -97,7 +97,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/websockify-vnc-x11-blender/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/websockify-vnc-x11-blender"
           platforms: linux/amd64
           push: true
           tags: ${{ env.REGISTRY }}/sage-3/cosage-blender:amd64
@@ -107,7 +107,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/websockify-vnc-x11-firefox/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/websockify-vnc-x11-firefox"
           platforms: linux/amd64
           push: true
           tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox:amd64
@@ -117,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           file: containers/websockify-vnc-x11-firefox-audio/Dockerfile
-          context: "{{defaultContext}}:."
+          context: "${{ github.workspace }}/containers/websockify-vnc-x11-firefox-audio"
           platforms: linux/amd64
           push: true
           tags: ${{ env.REGISTRY }}/sage-3/cosage-firefox-audio:amd64
