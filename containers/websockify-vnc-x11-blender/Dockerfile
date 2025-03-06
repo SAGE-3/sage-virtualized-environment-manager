@@ -1,4 +1,4 @@
-FROM vnc-x11-baseimage
+FROM localhost/vnc-x11-baseimage
 
 RUN apt-get -y install --no-install-recommends blender
 
