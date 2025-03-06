@@ -43,10 +43,8 @@ jobs:
 
 
       # Base Images
-      - name: Build docker images
-        uses: actions/checkout@v3
-        with:
-          run: cd containers/baseimage-websockify && docker build -t local < Dockerfile
+      - name: Build and push Base WebSockify Docker image internally
+        run: cd containers/baseimage-websockify && docker build -t local < Dockerfile
       # - name: Build and push Base WebSockify Docker image internally
       #   uses: docker/build-push-action@v5
       #   with:
@@ -56,7 +54,7 @@ jobs:
       #     load: true
       #     tags: websockify-baseimage:latest
 
-      - name: Build and push Base WebSockify Docker image internally
+      - name: Build and push Base WebSockify Audio Docker image internally
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify-audio/Dockerfile
