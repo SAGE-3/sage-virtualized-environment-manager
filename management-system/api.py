@@ -30,7 +30,6 @@ os.system("./init.sh")
 
 app = FastAPI()
 
-
 if prod_type.lower() != "development":
     for key, image in ContainerConfigs.prod_container_mapping.items():
         docker_pull(image)
