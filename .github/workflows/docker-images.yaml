@@ -15,7 +15,7 @@ jobs:
             image: registry:2
             ports:
               - 5000:5000
-              
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,7 +50,7 @@ jobs:
 
 
       # Base Images
-      - name: Build and push Base WebSockify Docker image internally
+      - name: "[INTERNAL_DOCKER]: VNC-X11"
         uses: docker/build-push-action@v5
         with:
           file: containers/baseimage-websockify/Dockerfile
@@ -70,7 +70,7 @@ jobs:
 
 
       # Elevation 1 (Intermediary)
-      - name: Build and push Base WebSockify VNC with X11 Docker image internally
+      - name: "[INTERNAL_DOCKER]: WebSockify + VNC-X11"
         uses: docker/build-push-action@v5
         with:
           build-contexts: |
@@ -92,9 +92,11 @@ jobs:
 
 
       # Elevation 2 (Final Containers/ Apps)
-      - name: Build and push Base WebSockify Docker image
+      - name: "[DOCKER]: VNC"
         uses: docker/build-push-action@v5
         with:
+          build-contexts: |
+            websockify-baseimage=docker-image://localhost:5000/websockify-baseimage:latest
           file: containers/websockify-vnc-connect/Dockerfile
           context: "${{ github.workspace }}/containers/websockify-vnc-connect"
           platforms: linux/amd64
@@ -102,9 +104,11 @@ jobs:
           tags: ${{ env.REGISTRY }}/sage-3/cosage-vnc:amd64
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push Blender Docker image
+      - name: "[DOCKER]: Blender"
         uses: docker/build-push-action@v5
         with:
+          build-contexts: |
+            vnc-x11-baseimage=docker-image://localhost:5000/vnc-x11-baseimage:latest
           file: containers/websockify-vnc-x11-blender/Dockerfile
           context: "${{ github.workspace }}/containers/websockify-vnc-x11-blender"
           platforms: linux/amd64
@@ -112,9 +116,11 @@ jobs:
           tags: ${{ env.REGISTRY }}/sage-3/cosage-blender:amd64
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Build and push Firefox Docker image
+      - name: "[DOCKER]: Firefox"
         uses: docker/build-push-action@v5
         with:
+          build-contexts: |
+            vnc-x11-baseimage=docker-image://localhost:5000/vnc-x11-baseimage:latest
           file: containers/websockify-vnc-x11-firefox/Dockerfile
           context: "${{ github.workspace }}/containers/websockify-vnc-x11-firefox"
           platforms: linux/amd64
