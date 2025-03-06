@@ -46,4 +46,4 @@ class ContainerConfigs:
    
    @staticmethod
    def prod_map_func(name):
-       return ContainerRegistry.prod_container_mapping[name]
+       return ContainerConfigs.prod_container_mapping[name]
