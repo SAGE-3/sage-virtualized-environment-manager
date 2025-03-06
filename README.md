@@ -1,4 +1,4 @@
-# Sage Virtualized Environment Manager
+# Sage Virtualized Environment Manager (CoSage)
 
 This simple piece of software allows to user to request on demand virtualized environment from a pre-curated list of docker containers. Virtualized desktop environments vnc connection is tunneled via websockify and proxied by Nginx to the frontend with automatic shutdown upon inactivity.
 
@@ -11,9 +11,8 @@ This simple piece of software allows to user to request on demand virtualized en
 | Container Path       | Function                                                                |
 | -------------------- | ----------------------------------------------------------------------- |
 | /var/run/docker.sock | Docker socket to establish communications with the host system's docker |
-| /app/data            | Data where the container's configs and data are stored                  |
 
-> The docker-compose.yml file needs to create a binding with the host systems docker.sock; this implementation will spin up indiviual containers on the host system. If this is intolerable, consider changing the docker binding another system or inside a docker container.
+> The docker-compose.yml file needs to create a binding with the host systems docker.sock; this implementation will spin up sibling containers on the host system. If this is intolerable, consider changing the docker binding another system or inside a docker container.
 
 ## Environment Variables
 
@@ -40,8 +39,7 @@ Management API, by default, exists on port 4024
 
 #### Requesting Containter
 
-- Will create new container if uid does not match, then return websocket and uuid
-- Will redeploy container if uid matches, then return websocket and uuid
+- Will deploy new container if uid does not match, then return websocket and uuid
 - Will return websocket and uuid if container already deployed
 
 <br>

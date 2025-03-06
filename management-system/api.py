@@ -54,8 +54,7 @@ def get_sage_url(port):
     return f"/stream/{port}"
 
 # Multipurpose api call
-# Will create new container if uuid does not match, then return websocket and uuid
-# Will redeploy container if uuid matches, then return websocket and uuid
+# Will deploy new container if uuid does not match, then return websocket and uuid
 # Will return websocket and uuid if container already deployed
 @app.post("/api/vm/any/{uid}")
 async def handle_assumed_uid_request(uid: str, configs: dict):#, image: {str}):
