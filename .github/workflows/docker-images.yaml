@@ -44,7 +44,7 @@ jobs:
 
       # Base Images
       - name: Build and push Base WebSockify Docker image internally
-        run: "cd ${{ github.workspace }}/containers/baseimage-websockify && docker build -t baseimage-websockify ."
+        run: "cd ${{ github.workspace }}/containers/baseimage-websockify && docker build -t websockify-baseimage ."
       # - name: Build and push Base WebSockify Docker image internally
       #   uses: docker/build-push-action@v5
       #   with:
