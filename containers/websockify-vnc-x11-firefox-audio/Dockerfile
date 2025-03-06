@@ -1,4 +1,4 @@
-FROM localhost/vnc-x11-audio-baseimage
+FROM vnc-x11-audio-baseimage:latest
 
 RUN apt-get -y install --no-install-recommends firefox-esr
 

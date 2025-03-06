@@ -1,4 +1,4 @@
-FROM localhost/vnc-x11-baseimage
+FROM vnc-x11-baseimage:latest
 
 RUN apt-get -y install --no-install-recommends firefox-esr wget unzip build-essential jq curl
 

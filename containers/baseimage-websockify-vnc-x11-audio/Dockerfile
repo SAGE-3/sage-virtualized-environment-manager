@@ -1,4 +1,4 @@
-FROM localhost/websockify-baseimage-audio
+FROM websockify-baseimage-audio:latest
 
 # xvfb + x11vnc seems to lack extended desktop size support
 # RUN apt-get -y install --no-install-recommends xvfb openbox x11vnc
