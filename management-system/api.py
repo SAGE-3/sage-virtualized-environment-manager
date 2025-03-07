@@ -8,10 +8,12 @@ import os
 import asyncio
 
 import pycurl
-from management import DockerManager, docker_pull
+from management import DockerManager, docker_pull, docker_network
 
 from foresight.config import config as conf, prod_type
 from config import ContainerConfigs
+
+
 # from dotenv import load_dotenv
 # load_dotenv() # load from .env file
 
@@ -23,7 +25,6 @@ jwt_token = os.getenv('TOKEN', '')
 print(sage3_app_url)
 print()
 print("Running in", prod_type, "mode")
-
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 os.system("./init.sh")
@@ -43,7 +44,8 @@ manager = DockerManager(
     supported_containers    = ContainerConfigs.supported_containers,
     container_base_name     = os.environ.get("CONTAINER_BASE_NAME", "collab-vm-"),
     ws_timeout              = os.environ.get("CONTAINER_NO_CLIENT_TIMEOUT", 20),
-    port_range              = (int(os.environ.get("PORT_RANGE_START", 11000)), int(os.environ.get("PORT_RANGE_END", 12000)))
+    port_range              = (int(os.environ.get("PORT_RANGE_START", 11000)), int(os.environ.get("PORT_RANGE_END", 12000))),
+    network                 = docker_network()
 )
 print("Init Done")
 
@@ -60,13 +62,13 @@ def get_sage_url(port):
 @app.post("/api/vm/any/{uid}")
 async def handle_assumed_uid_request(uid: str, configs: dict):#, image: {str}):
     global manager
-    print("Begin VM Any Request for", uid)
+    print(f"[{uid}]: Begin VM Any Request for")
 
     docker_args = manager.parse_container(configs) # TODO: return error that the container does not exist or whatever
     # docker_args["image"] = "vnc-x11-firefox" # Uncomment to override, only for demo purposes
     ws_url, port, uid = manager.load(uid=uid, docker_args=docker_args)
 
-    print("Blocking Operations Completed for", uid)
+    print(f"[{uid}]: Blocking Operations Completed")
     await manager.await_ws(ws_url, port, uid, await_time=1) # TODO: Remove uid from this function later
     return {"url": get_sage_url(port), "uid": uid} if uid else {"details": result}
 
@@ -91,7 +93,7 @@ async def get_all_uids():
 async def handle_callback(uid: str, configs: dict):
     global jwt_token
     global sage3_app_url
-    print(f"callback request for {uid}")
+    print(f"[{uid}]: Callback request")
     try:
         data = {"state.urls": configs["urls"]}
         headers = {

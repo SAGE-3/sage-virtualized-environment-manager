@@ -16,12 +16,12 @@ This simple piece of software allows to user to request on demand virtualized en
 
 ## Environment Variables
 
-| Variable Name               | Default Param | Function                                                               |
-| --------------------------- | ------------- | ---------------------------------------------------------------------- |
-| PORT_RANGE_START            | 11000         | Inclusive starting range for ports to be dynamically allocated         |
-| PORT_RANGE_END              | 12000         | Exclusive ending range for ports to be dynamically allocated           |
-| CONTAINER_BASE_NAME         | collab-vm-    | Containers will be created with the following schema "collab-vm-{uid}" |
-| CONTAINER_NO_CLIENT_TIMEOUT | 15            | Time after no active client connections before the container exits     |
+| Variable Name               | Default Param | Function                                                                                              |
+| --------------------------- | ------------- | ----------------------------------------------------------------------------------------------------- |
+| PORT_RANGE_START            | 11000         | Inclusive starting range for ports to be dynamically allocated (Currently Doesn't Change Nginx Ports) |
+| PORT_RANGE_END              | 12000         | Exclusive ending range for ports to be dynamically allocated (Currently Doesn't Change Nginx Ports)   |
+| CONTAINER_BASE_NAME         | collab-vm-    | Containers will be created with the following schema "collab-vm-{uid}"                                |
+| CONTAINER_NO_CLIENT_TIMEOUT | 15            | Time after no active client connections before the container exits                                    |
 
 > [!CAUTION]  
 > Please ensure that the port range is avaliable. Current implementation does not `ss` or `netsat` port mappings utilized beyond the scope of port allocation by docker. This will be fixed in a future revision.
