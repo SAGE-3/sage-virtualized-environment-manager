@@ -59,13 +59,13 @@ jobs:
           push: true
           tags: localhost:5000/websockify-baseimage:latest
 
-      - name: Build and push Base WebSockify Audio Docker image internally
+      - name: "[INTERNAL_DOCKER]: VNC-X11-AUDIO"
         uses: docker/build-push-action@v5
         with:
           file: base-containers/baseimage-websockify-audio/Dockerfile
           context: "${{ github.workspace }}/base-containers/baseimage-websockify-audio"
           platforms: linux/amd64
-          load: true
+          push: true
           tags: localhost:5000/websockify-baseimage-audio:latest
 
 
@@ -81,7 +81,7 @@ jobs:
           push: true
           tags: localhost:5000/vnc-x11-baseimage:latest
 
-      - name: Build and push Base WebSockify VNC with X11 and Audio image internally
+      - name: "[INTERNAL_DOCKER]: WebSockify + VNC-X11 + AUDIO"
         uses: docker/build-push-action@v5
         with:
           build-contexts: |
@@ -89,7 +89,7 @@ jobs:
           file: base-containers/baseimage-websockify-vnc-x11-audio/Dockerfile
           context: "${{ github.workspace }}/base-containers/baseimage-websockify-vnc-x11-audio"
           platforms: linux/amd64
-          load: true
+          push: true
           tags: localhost:5000/vnc-x11-audio-baseimage:latest
 
 

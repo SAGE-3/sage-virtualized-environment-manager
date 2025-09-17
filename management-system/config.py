@@ -6,7 +6,7 @@ class ContainerConfigs:
    
    prod_container_mapping = {
        'vnc-connect': f'ghcr.io/sage-3/cosage-vnc{tag}',
-       'sage-firefox': f'ghcr.io/sage-3/cosage-firefox{tag}',
+       'sage3-firefox': f'ghcr.io/sage-3/cosage-firefox{tag}',
        'vnc-x11-blender': f'ghcr.io/sage-3/cosage-blender{tag}',
    }
    
@@ -17,7 +17,7 @@ class ContainerConfigs:
                'TARGET_PORT': '5900',
            },
        },
-       'sage-firefox': {
+       'sage3-firefox': {
            "environment": {
                'FIREFOX_URLS': [],
                'FIREFOX_THEME': 0,
