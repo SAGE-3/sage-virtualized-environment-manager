@@ -122,7 +122,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           build-contexts: |
-            vnc-x11-baseimage=docker-image://localhost:5000/vnc-x11-audio-baseimage:latest
+            vnc-x11-audio-baseimage=docker-image://localhost:5000/vnc-x11-audio-baseimage:latest
           file: containers/firefox/Dockerfile
           context: "${{ github.workspace }}/containers/firefox"
           platforms: linux/amd64
