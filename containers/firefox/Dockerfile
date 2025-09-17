@@ -16,6 +16,7 @@ RUN gcc -Wall -o dejsonlz4 dejsonlz4-master/src/dejsonlz4.c dejsonlz4-master/src
 COPY configs/vnc.js /lib/firefox-esr/defaults/pref/
 COPY configs/vnc.cfg /lib/firefox-esr/
 COPY configs/install_plugin.sh .
+RUN chmod +x *.sh
 
 # Plugins
 # RUN firefox -CreateProfile "default-esr" --headless
