@@ -29,8 +29,13 @@ echo "Starting DE..."
 
 # /etc/init.d/pulseaudio-enable-autospawn start
 
-echo "load-module module-simple-protocol-tcp listen=127.0.0.1 format=s16le channels=2 rate=48000 record=true playback=false" > /etc/pulse/default.pa.d/simple-protocol.pa
-pulseaudio --start &
+# Configure PulseAudio
+mkdir -p /etc/pulse/default.pa.d
+echo "load-module module-null-sink sink_name=virtual_output" > /etc/pulse/default.pa.d/virtual-sink.pa
+echo "set-default-sink virtual_output" >> /etc/pulse/default.pa.d/virtual-sink.pa
+
+# Start PulseAudio
+pulseaudio --start --exit-idle-time=-1 &
 
 
 # pulseaudio &
@@ -54,9 +59,17 @@ openbox &
 #     sleep 0.1
 # done
 
+echo "Starting Audio Service..."
+python3 /audio_websocket_server.py &
+# python3 /audio_http_server.py &
+
+
+
 echo "Starting User App..."
 $1 &
 
 echo "DONE"
 ./websockify_proxy.sh
+./screenshot_callback.sh
+
 $2

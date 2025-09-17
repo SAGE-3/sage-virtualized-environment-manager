@@ -4,7 +4,7 @@ FROM websockify-baseimage-audio
 # RUN apt-get -y install --no-install-recommends xvfb openbox x11vnc
 # RUN apt-get -y install --no-install-recommends tigervnc-standalone-server tigervnc-tools
 RUN apt-get update
-RUN apt-get -y install --no-install-recommends x11-utils dbus-x11 xauth x11-xkb-utils xkb-data ffmpeg pulseaudio dbus
+RUN apt-get -y install --no-install-recommends x11-utils dbus-x11 xauth x11-xkb-utils xkb-data ffmpeg pulseaudio dbus python3-websockets imagemagick
 
 WORKDIR /
 COPY apps/turbovnc_3.1.1_amd64.deb .
@@ -20,7 +20,9 @@ ENV TARGET_IP=localhost
 ENV TARGET_PORT=5900
 
 COPY stream_audio.py .
+COPY audio_websocket_server.py .
 COPY entrypoint.sh .
+COPY screenshot_callback.sh .
 
 RUN chmod +x *.sh
 
