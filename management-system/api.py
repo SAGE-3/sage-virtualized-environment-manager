@@ -95,7 +95,8 @@ async def handle_callback(uid: str, configs: dict):
     global sage3_app_url
     print(f"[{uid}]: Callback request")
     try:
-        data = {"state.urls": configs["urls"]}
+        # data = {"state.urls": configs["urls"]}
+        data = configs
         headers = {
             'Authorization': f'Bearer {jwt_token}',
             'Content-Type': 'application/json'

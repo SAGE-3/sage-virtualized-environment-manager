@@ -11,6 +11,7 @@ RUN pip3 install -r requirements.txt
 COPY . .
 RUN chmod 777 *.sh
 
+COPY nginx/nginx.conf.template /etc/nginx/nginx.conf.template
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
 CMD ["./run.sh"]
