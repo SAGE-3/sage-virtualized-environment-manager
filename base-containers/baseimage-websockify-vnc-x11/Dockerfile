@@ -20,6 +20,7 @@ ENV TARGET_IP=localhost
 ENV TARGET_PORT=5900
 
 COPY entrypoint.sh .
+COPY screenshot_callback.sh .
 
 RUN chmod +x *.sh
 

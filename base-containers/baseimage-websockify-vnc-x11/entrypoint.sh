@@ -32,4 +32,6 @@ $1 &
 
 echo "DONE"
 ./websockify_proxy.sh
+./screenshot_callback.sh
+
 $2
